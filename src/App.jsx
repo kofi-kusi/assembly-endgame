@@ -4,16 +4,17 @@ import Header from "./components/Header";
 import Notice from "./components/Notice";
 import { languages } from "./languages";
 import { clsx } from "clsx";
+import { getNewWord } from "./utils";
+import Confetti from "react-confetti";
 
 function App() {
-  const [currentWord, setCurrentWord] = useState("react");
+  const [currentWord, setCurrentWord] = useState(getNewWord());
   const [guessedLetters, setGuessedLetters] = useState([]);
 
   const wrongGuessedCount = guessedLetters.filter(
     (letter) => !currentWord.includes(letter)
   ).length;
-  const languageObj = languages[wrongGuessedCount-1]
-  
+  const languageObj = languages[wrongGuessedCount - 1];
 
   const isGameWon = currentWord
     .split("")
@@ -21,9 +22,10 @@ function App() {
   const isGameLost = wrongGuessedCount >= languages.length - 1;
   const isGameOver = isGameWon || isGameLost;
 
-  const lastGuessedLetter = guessedLetters[guessedLetters.length -1]
-  const isLastGuessedIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter) 
-  console.log(isLastGuessedIncorrect)
+  const lastGuessedLetter = guessedLetters[guessedLetters.length - 1];
+  const isLastGuessedIncorrect =
+    lastGuessedLetter && !currentWord.includes(lastGuessedLetter);
+  console.log(isLastGuessedIncorrect);
 
   function addGuessedLetter(key) {
     setGuessedLetters((prev) => {
@@ -33,7 +35,16 @@ function App() {
 
   const word = currentWord.split("").map((letter, index) => {
     const isGuessed = guessedLetters.includes(letter);
-    return <span key={index}>{isGuessed && letter.toUpperCase()}</span>;
+    const revealWord = isGameLost || isGuessed;
+
+    const className = clsx(
+      isGameLost && !guessedLetters.includes(letter) && "missed-letter"
+    );
+    return (
+      <span className={className} key={index}>
+        {revealWord && letter.toUpperCase()}
+      </span>
+    );
   });
 
   const languagesList = languages.map((language, index) => {
@@ -75,17 +86,22 @@ function App() {
     );
   });
 
+  function newGame() {
+    setGuessedLetters([]);
+    setCurrentWord(getNewWord());
+  }
 
   return (
     <>
+      {isGameWon && <Confetti recycle={false} numberOfPieces={1000} />}
       <section className="top">
         <Header />
-        <Notice 
-          isGameLost = {isGameLost}
-          isGameWon = {isGameWon}
-          isGameOver = {isGameOver}
-          isLastGuessedIncorrect = {isLastGuessedIncorrect}
-          language = {languageObj}
+        <Notice
+          isGameLost={isGameLost}
+          isGameWon={isGameWon}
+          isGameOver={isGameOver}
+          isLastGuessedIncorrect={isLastGuessedIncorrect}
+          language={languageObj}
         />
       </section>
       <section className="elimination">
@@ -94,7 +110,7 @@ function App() {
       <section className="choosen-word">{word}</section>
       <section className="keyboard">{keys}</section>
       <section className="new-game">
-        {isGameOver && <button>New Game</button>}
+        {isGameOver && <button onClick={newGame}>New Game</button>}
       </section>
     </>
   );

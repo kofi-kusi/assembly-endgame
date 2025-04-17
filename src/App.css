@@ -117,6 +117,10 @@ header p {
     text-align: center;
 }
 
+span.missed-letter {
+    color: #BA2A2A;
+}
+
 .keyboard {
     display: flex;
     flex-wrap: wrap;
@@ -138,7 +142,7 @@ button.correct {
 }
 
 button.wrong {
-    background-color: #EC5D49;
+    background-color: #BA2A2A;
 }
 
 .new-game {
@@ -172,3 +176,4 @@ span.lost::before {
     left: 0;
     background-color: rgba(0, 0, 0, 0.7);
 }
+
