@@ -9,7 +9,9 @@ function App() {
   const [currentWord, setCurrentWord] = useState("react");
   const [guessedLetters, setGuessedLetters] = useState([])
 
-  console.log(guessedLetters)
+  let wrongGuessedCount = guessedLetters.filter(letter => !currentWord.includes(letter)).length
+  
+  console.log(wrongGuessedCount)
 
   function addGuessedLetter(key){
     setGuessedLetters(prev => {
@@ -18,12 +20,15 @@ function App() {
   }
 
   const word = currentWord.split("").map((letter, index) => {
-    return <span key={index}>{letter.toUpperCase()}</span>;
+    const isGuessed = guessedLetters.includes(letter)
+    return <span key={index}>{isGuessed && letter.toUpperCase()}</span>;
   });
 
-  const languagesList = languages.map((language) => {
+  const languagesList = languages.map((language, index) => {
+    const isOut = index < wrongGuessedCount;
     return (
-      <div
+      <span
+        className={isOut ? "lost" : ""}
         key={language.name}
         style={{
           backgroundColor: language.backgroundColor,
@@ -31,7 +36,7 @@ function App() {
         }}
       >
         {language.name}
-      </div>
+      </span>
     );
   });
 
