@@ -114,6 +114,14 @@ header p {
     border-radius: 4px;
 }
 
+button.correct {
+    background-color: #10A95B;
+}
+
+button.wrong {
+    background-color: #EC5D49;
+}
+
 .new-game {
     display: flex;
     align-items: center;
